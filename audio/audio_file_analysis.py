@@ -16,19 +16,8 @@ from config_files import config, config_process, create_folder_name
 def modify_audio_file(data, timings, sr, mode=False):
     """
     Function to remove segments from an audio file by creating a new audio
-    file containing audio segments from the onset/offset time markers
-    specified in the 'timings' variable
-
-    Inputs
-        data: numpy.array - The audio data to modify
-        timings: list - The onset and offset time markers
-        sr: int - The original sampling rate of the audio
-        mode: bool - Set True if only considering the background information
-              for the audio signal (this is the opening of the audio to the
-              point where the first interaction begins)
-
-    Output
-        updateed_audio: numpy.array - The updated audio file
+    file
+    
     """
     timings = np.array(timings, float)
     samples = timings * sr
