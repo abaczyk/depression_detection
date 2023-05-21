@@ -38,28 +38,6 @@ def modify_audio_file(data, timings, sr, mode=False):
 
 def max_min_values(current_directory, win_size, hop_size, audio_paths,
                    on_off_times, mode_for_background):
-    """
-    Calculates the maximum and minimum length of audio in the dataset
-
-    Inputs
-        current_directory: str - The location of the current workspace
-        win_size: int - The length of the window function
-        hop_size: int - The gap between windows passing over the audio
-        audio_paths: list - Locations of the audio data to be used
-        on_off_times: list - Time markers to extract specific sections of audio
-        mode_for_background: bool - Set True for keeping the background
-                             information only
-
-    Outputs
-        max_value: int - The longest file in the database
-        min_value: int - The shortest file in the database
-        sample_rate: int - The original sampling rate of the audio
-        total_windows_in_file_max: int - The largest file in sampled windows
-        total_windows_in_file_min: int - The shortest file in sampled windows
-        output_data: numpy.array - Holds meta information collected from each
-                     file such as sample rate, number of samples, time in
-                     minutes, and folder_number
-    """
 
     print('Processing Audio Files\n')
     max_value = 0
