@@ -78,11 +78,6 @@ def max_min_values(current_directory, win_size, hop_size, audio_paths,
     path = os.path.join(current_directory, 'meta_data')
     np.save(path, output_data)
 
-    # To calculate the STFT the following is used:
-    # output = ((audio - window) // hop) + 1
-    # If padding=True is used, both the start and end are padded by the hop
-    # length.
-    # output = (audio // hop) + 1
     total_windows_in_file_max = (max_value + (hop_size * 2)) - win_size
     total_windows_in_file_max = (total_windows_in_file_max // hop_size) + 1
     total_windows_in_file_min = (min_value + (hop_size * 2)) - win_size
@@ -95,37 +90,6 @@ def max_min_values(current_directory, win_size, hop_size, audio_paths,
 def create_database(labels, sample_rate, total_windows_in_file_max, max_value,
                     current_directory, features_exp, win_size, hop_size, snv,
                     freq_bins, main_logger, whole_train, gender='-'):
-    """
-    Creates a database of extracted features from the raw input data such as
-    text or audio. The database contains metadata such as folder, class,
-    score, and the index of each respective file.
-
-    Inputs
-        labels: list - Holds meta data for database including folder, class,
-                score, and index
-        sample_rate: int - The original sampling rate of the database
-        total_windows_in_file_max: int - The longest file in the database in
-                                   terms of windowed samples
-        current_directory: str - The location of the save directory
-        features_exp: str - The type of features to be extracted
-        win_size: int - The length of the window to be passed over the audio
-        hop_size: int - The gap between the windows passing over the audio
-        freq_bins: int - The number of frequency bins to split the features
-                   into, for example, features_exp=logmel - freq_bins=64 would
-                   result in an audio signal that takes shape of [freq_bins,
-                   time]
-        main_logger: logger - Records important information
-        whole_train: bool - Set True to convert all files to the maximum
-                     length found in the database
-
-    Output
-        num_samples_feature: list - Records the length of every file to be
-                             recorded in another function along with summary
-                             data
-    """
-    # Everything in this h5 dataset is in numerical order. All the
-    # folders, classes and features will be written in ascending order.
-    # The train, dev and test labels will provide the shuffling
     datatype = h5py.special_dtype(vlen=np.float32)
     if gender == 'f' or gender == 'm':
         h5file = h5py.File(os.path.join(current_directory,
@@ -171,8 +135,6 @@ def create_database(labels, sample_rate, total_windows_in_file_max, max_value,
             mel_bins=freq_bins, fmin=fmin, fmax=fmax, window_func=window_func,
             log=log, snv=snv)
 
-    # Loop through all the files and get the sampling rate, number of
-    # samples and the time in minutes
     num_samples_feature = []
     for pointer, folder in enumerate(labels[0]):
         audio_file_path = os.path.join(current_directory,
@@ -349,15 +311,7 @@ def process_organise_data(main_logger,
 
     labels = utilities.get_labels_from_dataframe(config.COMP_DATASET_PATH)
 
-    # For debugging purposes
-    # l1 = labels[0][0:2]
-    # l2 = labels[1][0:2]
-    # l3 = labels[2][0:2]
-    # l1 = labels[0][0:35]
-    # l2 = labels[1][0:35]
-    # l3 = labels[2][0:35]
-    # l4 = labels[3][0:35]
-    # labels = [l1, l2, l3, l4]
+   
     if config.GENDER:
         fin_label = [[[], [], [], []], [[], [], [], []]]
         for i in range(len(labels[0])):
