@@ -7,6 +7,7 @@ import sys
 import librosa
 import numpy as np
 import time
+import soundfile as sf
 
 '''
 
@@ -326,3 +327,7 @@ def remove_words_symbols(string):
         string = string.replace(string, '')
 
     return string
+
+# def remove_noise_other_way(input_file):
+     # audio_data, sample_rate = sf.read(input_file)
+     # reduced_noise = nr.reduce_noise(audio_data, sample_rate)
