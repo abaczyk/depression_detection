@@ -3,20 +3,7 @@ import sys
 from zipfile import ZipFile
 
 def get_meta_data(dataset_path):
-    """
-    Grabs meta data from the dataset including, a list of the folders,
-    a list of the audio paths, and a list of the transcription files for all
-    the files in the dataset
-
-    Input
-        dataset_path: str - Location of the dataset
-
-    Outputs
-        folder_list: list - The complete list of folders in the dataset
-        audio_paths: list - The complete list of audio locations for the data
-        transcript_paths: list - The complete list of locations of the
-                          transcriptions
-    """
+    
     folder_list = []
     audio_files = []
     audio_paths = []
