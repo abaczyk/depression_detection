@@ -8,12 +8,6 @@ from utils.utilities import create_directories
 
 
 def mel(mel_filter):
-    """
-    Plots a mel filter
-
-    Input
-        mel_filter: numpy.array - The mel filter to be plotted
-    """
     plt.figure()
     librosa.display.specshow(mel_filter, x_axis='linear')
     plt.ylabel('Mel Filter')
@@ -24,17 +18,6 @@ def mel(mel_filter):
 
 
 def save_plain_plot(directory, folder_name, spectrogram, spec_type='logmel'):
-    """
-    Saves a basic image of a spectrogram with no axes. If the directory for
-    saving the image does not exist, one will be created
-
-    Inputs
-        directory: str - Location to save the images of the spectrogram
-        folder_name: str - Name of the file to be saved
-        spectrogram: numpy.array - The spectrogram data to be saved
-        spec_type: str - Used for folder name of the type of spectrogram to
-                   be saved
-    """
     save_path_images = os.path.join(directory, spec_type)
     if not os.path.exists(save_path_images):
         create_directories(directory, spec_type)
@@ -50,11 +33,7 @@ def save_plain_plot(directory, folder_name, spectrogram, spec_type='logmel'):
 
 
 def plot_mfcc(spec):
-    """
-    Plots the MFCC
-    Input
-        spec: numpy.array the MFCC of some audio data
-    """
+    
     plt.figure(figsize=(10, 6))
     librosa.display.specshow(spec, x_axis='time')
     plt.colorbar()
@@ -63,13 +42,7 @@ def plot_mfcc(spec):
 
 
 def plot_spectrogram(spec, type_of_spec=''):
-    """
-    Plots spectrogram or logmel spectrogram
 
-    Inputs
-        spec: numpy.array - The spectrogram to be plotted
-        type_of_spec: str - Used to determine the type of spectrogram
-    """
     if type_of_spec == '':
         librosa.display.specshow(spec, x_axis='frames')
     else:
@@ -82,19 +55,7 @@ def plot_spectrogram(spec, type_of_spec=''):
 
 def plot_graph(epoch, results, total_epochs, model_dir, early_stopper=False,
                vis=False):
-    """
-    Plots a graph of the performance of a network up to a certain epoch
 
-    Inputs
-        epoch: int - The current epoch
-        results: pandas.dataframe - Complete results of experiment
-        total_epochs: int - The total number of epochs for the experiment -
-                      determines when to save the plot
-        model_dir: str - The location where the model is saved
-        early_stopper: bool - If True, saves the plot even if total_epochs
-                       has not been reached
-        vis: bool - Set True if plot is to be visible after every epoch
-    """
     x_values = list(range(1, epoch+1))
 
     fig, ax1 = plt.subplots()
@@ -132,16 +93,7 @@ def plot_graph(epoch, results, total_epochs, model_dir, early_stopper=False,
 
 
 def confusion_mat(target, predict):
-    """
-    Produces a confusion matrix for the binary class classification problem
 
-    Inputs
-        target: numpy.array - The labels for the dataset
-        predict: numpy.array - The output predictions from a model
-
-    Output
-        cm: pandas.dataframe - The confusion matrix
-    """
     matrix = np.array([['-', '-', 0, 1],
                        ['Ground', 0, 0, 0],
                        ['Truth', 1, 0, 0]])
