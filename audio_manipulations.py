@@ -8,7 +8,7 @@ import librosa
 import numpy as np
 import time
 import soundfile as sf
-
+import noisereduce as nr
 '''
 
 In this file we: remove audio segments from original file, process all transcriptions, 
