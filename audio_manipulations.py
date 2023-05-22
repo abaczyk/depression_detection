@@ -1,4 +1,5 @@
 
+
 import scipy
 import main
 import os
@@ -11,7 +12,8 @@ import time
 '''
 
 In this file we: remove audio segments from original file, process all transcriptions, 
-calculate the maximum and minimum length of audio in the dataset, delete noises 
+calculate the maximum and minimum length of audio in the dataset, delete noises, remove 
+words from transcriptions 
 
 '''
 '''
@@ -300,3 +302,29 @@ def removeNoise(
     recovered_signal = _istft(sig_stft_amp, hop_length, win_length)
 
     return recovered_signal
+
+
+def remove_words_symbols(string):
+    if isinstance(string, str):
+        temp = string.split()
+    else:
+        temp = string[:]
+    marked_for_removal = []
+    for split_string in temp:
+        words_to_remove = {0: 'xxx', 1: 'xxxx', 2: ' ', 3: '  ', 4: '   ', 5: '    ',
+                           6: '     '}
+        symbols_to_remove = ['<', '>', '[', ']']
+        if split_string in words_to_remove.values():
+            marked_for_removal.append(split_string)
+        else:
+            if any(symb in split_string for symb in
+                   symbols_to_remove):
+                marked_for_removal.append(split_string)
+    for pointer in range(len(marked_for_removal)):
+        string = string.replace(marked_for_removal[pointer], '')
+
+    if string in words_to_remove.values():
+        string = string.replace(string, '')
+
+    return string
+
