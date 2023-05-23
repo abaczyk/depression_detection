@@ -1,10 +1,12 @@
 import os
 import wave
 from sys import prefix
-
+import audioread
 import numpy as np
 import librosa
 import values
+import wave
+
 
 cluster_size = 16
 min_len = 100
@@ -18,7 +20,7 @@ def read(dataset_path):
             folder_list.append(i)
             for j in os.listdir(os.path.join(dataset_path, i)):
                 if 'wav' in j:
-                    audio_files.append(j)
+                    audio_files.append(os.path.join(dataset_path, i,j))
     return audio_files
 
 
@@ -66,10 +68,10 @@ def wav2vlad(wave_data, sr, len_s):
     f0min = librosa.note_to_hz('C2')
     f0max = librosa.note_to_hz('C7')
 
-    # mfcc_melspec = librosa.feature.melspectrogram(y=signal, sr=sr, n_mels=80)
-    # mfcc_coefficients = librosa.feature.mfcc(S=librosa.power_to_db(mfcc_melspec), n_mfcc=40)
+    mfcc_melspec = librosa.feature.melspectrogram(y=signal, sr=sr, n_mels=80)
+    mfcc_coefficients = librosa.feature.mfcc(S=librosa.power_to_db(mfcc_melspec), n_mfcc=40)
     mfcc_val = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=13)
-    # f0_val = librosa.yin(y=signal, fmin=f0min, fmax=f0max)
+    f0_val = librosa.yin(y=signal, fmin=f0min, fmax=f0max)
     f0_val, voiced_flag, _ = librosa.pyin(signal, fmin=f0min, fmax=f0max)
     f0_mean = np.mean(f0_val)
     rms_val = librosa.feature.rms(y=signal)  # energy value
@@ -139,4 +141,15 @@ audio_mel_features = []
 audio_features = []
 zip_directory = values.zip_directory
 read(zip_directory)
+sr = values.EXPERIMENT_DETAILS['SAMPLE_RATE']
+
+
+'''
+
+In audio_files we have pathes to files to operate in a simple way
+
+'''
+
+
+
 
