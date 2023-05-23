@@ -13,6 +13,7 @@ cluster_size = 16
 min_len = 100
 max_len = -1
 
+
 def read(dataset_path):
     folder_list = []
     audio_files = []
@@ -37,6 +38,7 @@ def speech_rate(wav_path):
     speech_rate = (len(audio) / sample_rate) / (duration / 60)
     return speech_rate
 
+
 def calculate_freq(wav_path):
 
     audio, sample_rate = sf.read(wav_path)
@@ -46,6 +48,7 @@ def calculate_freq(wav_path):
     frequencies = np.arctan2(np.imag(angles), np.real(angles)) * (sample_rate / (2 * np.pi))
     bandwidths = -1 / 2 * (sample_rate / (2 * np.pi)) * np.log(np.abs(roots))
     return frequencies, bandwidths
+
 
 def wavtovlad(wav_path):
 
@@ -82,6 +85,11 @@ def wavtovlad(wav_path):
     flatness_val = librosa.feature.spectral_flatness(y=audio)
     rolloff_val = librosa.feature.spectral_rolloff(y=audio, sr=sample_rate)
 
+    
+for i in read(zip_directory):
+    speech_rate(i)
+    calculate_freq(i)
+    wavtovlad(i)
 
 
 
