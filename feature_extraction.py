@@ -23,12 +23,6 @@ def read(dataset_path):
     return audio_files
 
 
-audio_mel_features = []
-audio_features = []
-zip_directory = values.zip_directory
-read(zip_directory)
-
-
 def speech_rate(wav_path):
     audio, sample_rate = sf.read(wav_path)
     duration = librosa.get_duration(y=audio, sr=sample_rate)
@@ -82,6 +76,11 @@ def wavtovlad(wav_path):
     flatness_val = librosa.feature.spectral_flatness(y=audio)
     rolloff_val = librosa.feature.spectral_rolloff(y=audio, sr=sample_rate)
 
+
+audio_mel_features = []
+audio_features = []
+zip_directory = values.zip_directory
+read(zip_directory)
     
 for i in read(zip_directory):
     speech_rate(i)
