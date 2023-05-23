@@ -1,6 +1,7 @@
-import unzip_files
+import file_management
 import config
 
 if __name__ == "__main__":
-  unzip_files.get_meta_data(config.DATASET_DIR)
-  unzip_files.append_list(config.DATASET_DIR)
+  # file_management.extract_zip_files(config.DATASET_DIR)
+  file_management.read_files_from_dir(config.DATASET_DIR)
+
