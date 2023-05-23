@@ -171,6 +171,28 @@ def remove_noise(input_dir):
 zip_directory = values.zip_directory
 input_dir = feature_extraction.read(zip_directory)
 
+'''
+
+e.g. remove_segments(audio_data,on_off_times[0],sample_rate, mode=False)
+'''
+def remove_segments(data, timings, sr, mode=False):
+    timings = np.array(timings, float)
+    samples = timings * sr
+    samples = np.array(samples, int)
+    pointer = 0
+    if mode:
+        updated_audio = data[0:samples[0][1]]
+    else:
+        for i in samples:
+            if pointer == 0:
+                updated_audio = data[i[0]:i[1]]
+                pointer += 1
+            else:
+                updated_audio = np.hstack((updated_audio, data[i[0]:i[1]]))
+
+    return updated_audio
+
+
 transcript_file_processing(read(values.zip_directory),mode_for_bkgnd=False, remove_background=True)
 for i in input_dir:
     remove_noise(i)
