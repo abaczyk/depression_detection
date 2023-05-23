@@ -10,19 +10,16 @@ import soundfile as sf
 
 
 cluster_size = 16
-min_len = 100
-max_len = -1
 
 
 def read(dataset_path):
-    folder_list = []
-    audio_files = []
-    for i in os.listdir(dataset_path):
-        if i.endswith('_P'):
-            folder_list.append(i)
-            for j in os.listdir(os.path.join(dataset_path, i)):
-                if 'wav' in j:
-                    audio_files.append(os.path.join(dataset_path, i,j))
+    audio_files = [
+        os.path.join(dataset_path, i, j)
+        for i in os.listdir(dataset_path)
+        if i.endswith('_P')
+        for j in os.listdir(os.path.join(dataset_path, i))
+        if 'wav' in j
+    ]
     return audio_files
 
 
