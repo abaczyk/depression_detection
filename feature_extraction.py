@@ -3,7 +3,7 @@ import wave
 from sys import prefix
 import numpy as np
 import librosa
-import values
+import config
 import wave
 import speech_recognition as sr
 import soundfile as sf
@@ -77,12 +77,11 @@ def wavtovlad(wav_path):
     rolloff_val = librosa.feature.spectral_rolloff(y=audio, sr=sample_rate)
 
 
-audio_mel_features = []
+audio_mel_features = [] 
 audio_features = []
-zip_directory = values.zip_directory
-read(zip_directory)
+read(config.DATASET_DIR)
     
-for i in read(zip_directory):
+for i in read(config.DATASET_DIR):
     speech_rate(i)
     calculate_freq(i)
     wavtovlad(i)

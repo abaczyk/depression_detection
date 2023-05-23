@@ -2,10 +2,14 @@
 import soundfile as sf
 import noisereduce as nr
 import os
-import values
+import config
 import feature_extraction
+import numpy as np
+import pickle
+import sys
 
-def read(dataset_path):
+
+def read(dataset_path): 
     transcript_paths = [
         os.path.join(dataset_path, i, j)
         for i in os.listdir(dataset_path)
@@ -146,7 +150,7 @@ def transcript_file_processing(current_dir,
                         sys.exit()
             on_off_times.append(inter)
 
-        with open(os.path.join('C:/Users/admin/Desktop/My_preproces', 'on_off_times.pickle'), 'wb') as f:
+        with open(os.path.join(config.SAVE_DIRECTORY, 'on_off_times.pickle'), 'wb') as f: 
             pickle.dump(on_off_times, f)
 
         return on_off_times
@@ -167,9 +171,8 @@ def remove_noise(input_dir):
      
      output_file = os.path.join(output_dir, output_wav)
      sf.write(output_file, volume_red , sample_rate)
-        
-zip_directory = values.zip_directory
-input_dir = feature_extraction.read(zip_directory)
+     
+input_dir = feature_extraction.read(config.DATASET_DIR)
 
 '''
 
@@ -193,6 +196,6 @@ def remove_segments(data, timings, sr, mode=False):
     return updated_audio
 
 
-transcript_file_processing(read(values.zip_directory),mode_for_bkgnd=False, remove_background=True)
+transcript_file_processing(read(config.DATASET_DIR),mode_for_bkgnd=False, remove_background=True) #TODO czemu to jest nie w funkcji
 for i in input_dir:
     remove_noise(i)
