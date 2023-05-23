@@ -1,7 +1,6 @@
 import os
 import wave
 from sys import prefix
-import audioread
 import numpy as np
 import librosa
 import values
