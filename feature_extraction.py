@@ -31,18 +31,6 @@ zip_directory = values.zip_directory
 read(zip_directory)
 
 
-def speech_duration(wav_file):
-    audio = wave.open(wav_file, mode="rb")
-    sample_rate = audio.getframerate()
-    recognizer = sr.Recognizer()
-    with sr.AudioFile(wav_file) as source:
-        audio_data = recognizer.record(source)
-    text = recognizer.recognize_google(audio_data)
-    duration = audio.getnframes() / float(sample_rate)
-    words = len(text.split())
-    speech_rate = words / (duration / 60)
-    return speech_rate
-
 def speech_rate(wav_path):
     audio, sample_rate = sf.read(wav_path)
     duration = librosa.get_duration(y=audio, sr=sample_rate)
