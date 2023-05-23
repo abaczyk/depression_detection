@@ -5,6 +5,14 @@ from sys import prefix
 import numpy as np
 import librosa
 
+def wav_detection(dataset_path):
+    audio_files = []
+            if i.endswith('_P'):
+            folder_list.append(i)
+            for j in os.listdir(os.path.join(dataset_path, i)):
+                if 'wav' in j:
+                    audio_files.append
+    return audio_files
 
 def calculate_speech_rate(signal, sr, len_s, rms_val):
     silence_threshold = 0.01
@@ -16,7 +24,7 @@ def calculate_speech_rate(signal, sr, len_s, rms_val):
 
     total_silence_duration = sum(segment[1] - segment[0] for segment in silence_segments)
     speech_duration = len_s - total_silence_duration
-
+    
     words = len(signal) / sr / 60
     speech_rate = words / speech_duration
     return speech_rate
