@@ -4,15 +4,23 @@ from sys import prefix
 
 import numpy as np
 import librosa
+import values
 
-def wav_detection(dataset_path):
+cluster_size = 16
+min_len = 100
+max_len = -1
+
+def read(dataset_path):
+    folder_list = []
     audio_files = []
-            if i.endswith('_P'):
+    for i in os.listdir(dataset_path):
+        if i.endswith('_P'):
             folder_list.append(i)
             for j in os.listdir(os.path.join(dataset_path, i)):
                 if 'wav' in j:
-                    audio_files.append
+                    audio_files.append(j)
     return audio_files
+
 
 def calculate_speech_rate(signal, sr, len_s, rms_val):
     silence_threshold = 0.01
@@ -24,7 +32,7 @@ def calculate_speech_rate(signal, sr, len_s, rms_val):
 
     total_silence_duration = sum(segment[1] - segment[0] for segment in silence_segments)
     speech_duration = len_s - total_silence_duration
-    
+
     words = len(signal) / sr / 60
     speech_rate = words / speech_duration
     return speech_rate
@@ -129,4 +137,6 @@ def extract_features(number, audio_features, targets, path):
     targets.append(target)
 audio_mel_features = []
 audio_features = []
-zip_directory = ''
+zip_directory = values.zip_directory
+read(zip_directory)
+
