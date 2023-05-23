@@ -95,9 +95,6 @@ def wavtovlad(wav_path):
     rolloff_val = librosa.feature.spectral_rolloff(y=audio, sr=sample_rate)
 
 
-for i in read(zip_directory):
-    speech_duration(i)
-    speech_rate(i)
-    wavtovlad(i)
+
 
 
