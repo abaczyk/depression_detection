@@ -3,6 +3,7 @@ import os
 import glob
 import audio_manipulations
 import feature_extraction
+import csv
 
 features = []
 labels = []
@@ -20,10 +21,18 @@ def extract_zip_files(dataset_path):
 
 
 def read_files_from_dir(dataset_path):
-    for file in glob.glob(dataset_path + '\\*_P\\*'):
-        filename = file.split('\\')[-1]
-        if 'TRANSCRIPT.csv' in filename:
-            audio_manipulations.transcript_file_processing(file)
-        if 'wav' in filename:
-            feature = feature_extraction.get_features(file)
-            features.append(feature)
+    with open('all_labels.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            id = row['ID']
+            label = row['PHQ_bin']
+            transcript_filename = f'{dataset_path}\\{id}_P\\{id}_TRANSCRIPT.csv'
+            audio_filename = f'{dataset_path}\\{id}_P\\{id}_AUDIO.wav'
+            if os.path.isfile(transcript_filename):
+                audio_manipulations.transcript_file_processing(transcript_filename)
+            if os.path.isfile(audio_filename):
+                feature = feature_extraction.get_features(audio_filename)
+                features.append(feature)
+                labels.append(label)    
+
+    csvfile.close()
