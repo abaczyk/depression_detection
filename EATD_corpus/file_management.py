@@ -3,6 +3,7 @@ import sys
 import os
 import extract_audio_features
 import numpy as np
+import csv
 
 
 
@@ -12,22 +13,31 @@ def save_features(prefix, audio_features):
     np.savez(os.path.join(prefix, 'AudioFeaturesEATD\extracted_audio_features.npz'), audio_features)
     print('Saved audio features in: {}/AudioFeaturesEATD'.format(prefix))
 
+
 def get_EATDcorpus():
-    if os.path.exists(os.path.join(os.path.abspath(os.path.join(os.getcwd(), ".")), 'EATD-corpus')):
+    EATD_corpus_folder = 'EATD-corpus'
+
+    if os.path.exists(os.path.join(os.path.abspath(os.path.join(os.getcwd(), ".")), EATD_corpus_folder)):
         prefix = os.path.abspath(os.path.join(os.getcwd(), "."))
-    if os.path.exists(os.path.join(os.path.abspath(os.path.join(os.getcwd(), "..")), 'EATD-corpus')):
+    elif os.path.exists(os.path.join(os.path.abspath(os.path.join(os.getcwd(), "..")), EATD_corpus_folder)):
         prefix = os.path.abspath(os.path.join(os.getcwd(), ".."))
     else:
-        print('Brak pliku z baza')
+        print('Missing database folder')
         return
 
 
     audio_features = []
-    audio_file_name = 'EATD-corpus'
+    labels = []
+    EATD_corpus_path = os.path.join(prefix, EATD_corpus_folder)
 
-    # total files 105
-    for index in range(105):
-        extract_audio_features.extract_features(index + 1, audio_features, audio_file_name, prefix)
+    with open(os.path.join(prefix, 'labels.csv'), 'w', newline='') as output_csv_file:
+        csv_writer = csv.writer(output_csv_file)
+
+        for folder_name in os.listdir(EATD_corpus_path):
+            extract_audio_features.extract_features(folder_name, audio_features, labels, EATD_corpus_path)
+
+        for item in labels:
+            csv_writer.writerow(item)
 
     save_features(prefix, audio_features)
 
