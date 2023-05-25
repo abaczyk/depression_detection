@@ -2,6 +2,8 @@ import config
 import numpy as np
 import librosa
 import audio_manipulations
+import wave
+import os
 
 
 cluster_size = 16
@@ -22,9 +24,8 @@ def calculate_freq(audio, sample_rate):
     return frequencies, bandwidths
 
 
-def get_features(wav_path):
+def get_features(wav_path, sample_rate=config.SAMPLE_RATE):
     audio = audio_manipulations.remove_noise(wav_path)
-    sample_rate = config.SAMPLE_RATE
     features = np.empty((0))
 
     # f0min = librosa.note_to_hz('C2') #todo - jeśli odpalimy z f0, to strasznie długo to się wykonuje
@@ -64,4 +65,41 @@ def get_features(wav_path):
     features = np.hstack((features, rolloff_val))
 
     return features
+
+def extract_features_eatd(number, audio_features, path, prefix):
+    if not os.path.exists(os.path.join(prefix, '{1}/t_{0}/positive_out.wav'.format(number, path))):
+        return
+    print('Extracting features file: ', number)
+
+    positive_file = wave.open(os.path.join(prefix, '{1}/t_{0}/positive_out.wav'.format(number, path)))
+    sr1 = positive_file.getframerate()
+    nframes1 = positive_file.getnframes()
+    wave_data1 = np.frombuffer(positive_file.readframes(nframes1), dtype=np.short).astype(np.float64)
+
+    neutral_file = wave.open(os.path.join(prefix, '{1}/t_{0}/neutral_out.wav'.format(number, path)))
+    sr2 = neutral_file.getframerate()
+    nframes2 = neutral_file.getnframes()
+    wave_data2 = np.frombuffer(neutral_file.readframes(nframes2), dtype=np.short).astype(np.float64)
+
+    negative_file = wave.open(os.path.join(prefix, '{1}/t_{0}/negative_out.wav'.format(number, path)))
+    sr3 = negative_file.getframerate()
+    nframes3 = negative_file.getnframes()
+    wave_data3 = np.frombuffer(negative_file.readframes(nframes3), dtype=np.short).astype(np.float64)
+
+    if wave_data1.shape[0] < 1:
+        wave_data1 = np.array([1e-4] * sr1 * 5)
+    if wave_data2.shape[0] < 1:
+        wave_data2 = np.array([1e-4] * sr2 * 5)
+    if wave_data3.shape[0] < 1:
+        wave_data3 = np.array([1e-4] * sr3 * 5)
+
+    features1 = get_features(wave_data1, sr1)
+    features2 = get_features(wave_data2, sr2)
+    features3 = get_features(wave_data3, sr3)
+    audio_features.append([features1, features2, features3])
+
+
+
+
+
 

@@ -1,9 +1,10 @@
 import zipfile
 import os
-import glob
+import numpy as np
 import audio_manipulations
 import feature_extraction
 import csv
+import config
 
 features = []
 labels = []
@@ -36,3 +37,19 @@ def read_files_from_dir(dataset_path):
                 labels.append(label)    
 
     csvfile.close()
+
+def save_features(prefix, audio_features):
+    if not os.path.exists(os.path.join(prefix, 'AudioFeaturesEATD')):
+        os.mkdir(os.path.join(prefix, 'AudioFeaturesEATD'))
+    np.savez(os.path.join(prefix, 'AudioFeaturesEATD\extracted_audio_features.npz'), audio_features)
+    print('Saved audio features in: {}/AudioFeaturesEATD'.format(config.SAVE_DIR))
+
+def get_EATDcorpus():
+    audio_features = []
+    audio_file_name = 'EATD-corpus'
+
+    # total files 105
+    for index in range(105): #todo usunąć to
+        feature_extraction.extract_features(index + 1, audio_features, audio_file_name)
+
+    save_features(config.SAVE_DIR, audio_features)
