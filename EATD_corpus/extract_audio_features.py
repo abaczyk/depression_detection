@@ -20,7 +20,7 @@ def calculate_formant_freq_bandwidths(signal, sr):
     angles = np.angle(roots)
     frequencies = np.arctan2(np.imag(angles), np.real(angles)) * (sr / (2 * np.pi))
     bandwidths = -1 / 2 * (sr / (2 * np.pi)) * np.log(np.abs(roots))
-    return frequencies, bandwidths
+    return frequencies , bandwidths
 
 
 
@@ -87,28 +87,32 @@ def wav2vlad(wave_data, sr, len_s):
     return features
 
 
-def extract_features(number, audio_features, path, prefix):
-    if not os.path.exists(os.path.join(prefix, '{1}/t_{0}/positive_out.wav'.format(number, path))):
+def extract_features(folder_name, audio_features, labels, prefix):
+    if not os.path.exists(os.path.join(prefix, '{}/positive_out.wav'.format(folder_name))):
         return
-    print('Extracting features file: ', number)
+    print('Extracting features file: ', folder_name)
 
-    positive_file = wave.open(os.path.join(prefix, '{1}/t_{0}/positive_out.wav'.format(number, path)))
+    positive_file = wave.open(os.path.join(prefix, '{}/positive_out.wav'.format(folder_name)))
     sr1 = positive_file.getframerate()
     nframes1 = positive_file.getnframes()
     wave_data1 = np.frombuffer(positive_file.readframes(nframes1), dtype=np.short).astype(np.float64)
     len1 = nframes1 / sr1
 
-    neutral_file = wave.open(os.path.join(prefix, '{1}/t_{0}/neutral_out.wav'.format(number, path)))
+    neutral_file = wave.open(os.path.join(prefix, '{}/positive_out.wav'.format(folder_name)))
     sr2 = neutral_file.getframerate()
     nframes2 = neutral_file.getnframes()
     wave_data2 = np.frombuffer(neutral_file.readframes(nframes2), dtype=np.short).astype(np.float64)
     len2 = nframes2 / sr2
 
-    negative_file = wave.open(os.path.join(prefix, '{1}/t_{0}/negative_out.wav'.format(number, path)))
+    negative_file = wave.open(os.path.join(prefix, '{}/positive_out.wav'.format(folder_name)))
     sr3 = negative_file.getframerate()
     nframes3 = negative_file.getnframes()
     wave_data3 = np.frombuffer(negative_file.readframes(nframes3), dtype=np.short).astype(np.float64)
     len3 = nframes3 / sr3
+
+    with open(os.path.join(prefix, '{}/label.txt'.format(folder_name)), 'r') as label_file:
+        raw_SDS_score = label_file.readline().strip()
+
 
     if wave_data1.shape[0] < 1:
         wave_data1 = np.array([1e-4] * sr1 * 5)
@@ -122,6 +126,10 @@ def extract_features(number, audio_features, path, prefix):
     features2 = wav2vlad(wave_data2, sr2, len2)
     features3 = wav2vlad(wave_data3, sr3, len3)
     audio_features.append([features1, features2, features3])
+
+    is_depression = 1 if float(raw_SDS_score) > 42 else 0
+    labels.append([folder_name, raw_SDS_score, is_depression])
+
 
 
 
