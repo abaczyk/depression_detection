@@ -6,14 +6,10 @@ import wave
 import os
 
 
-cluster_size = 16
-
-
 def get_speech_rate(audio, sample_rate):
     duration = librosa.get_duration(y=audio, sr=sample_rate)
     speech_rate = (len(audio) / sample_rate) / (duration / 60)
     return speech_rate
-
 
 def calculate_freq(audio, sample_rate):
     lpc_coeff = librosa.lpc(audio, order=8)
@@ -23,9 +19,11 @@ def calculate_freq(audio, sample_rate):
     bandwidths = -1 / 2 * (sample_rate / (2 * np.pi)) * np.log(np.abs(roots))
     return frequencies, bandwidths
 
+def read_file(wav_path, sample_rate=config.SAMPLE_RATE):
+    return librosa.load(str(wav_path), sr=sample_rate)
 
-def get_features(wav_path, sample_rate=config.SAMPLE_RATE):
-    audio = audio_manipulations.remove_noise(wav_path)
+def get_features(audio_data, sample_rate=config.SAMPLE_RATE):
+    audio = audio_manipulations.remove_noise(audio_data, sample_rate)
     features = np.empty((0))
 
     # f0min = librosa.note_to_hz('C2') #todo - jeśli odpalimy z f0, to strasznie długo to się wykonuje

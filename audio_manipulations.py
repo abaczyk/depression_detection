@@ -126,9 +126,9 @@ def transcript_file_processing(current_dir,
 
     return on_off_times
 
-def remove_noise(input_dir):
+def remove_noise(audio_data, sample_rate):
+    
     # output_dir = '/not_noise/'
-    audio_data, sample_rate = librosa.load(str(input_dir), sr=config.SAMPLE_RATE)
     
     # os.makedirs(output_dir, exist_ok=True)
     # file_name = os.path.basename(input_dir)
@@ -142,6 +142,7 @@ def remove_noise(input_dir):
     # output_file = os.path.join(output_dir, output_wav)
     # sf.write(output_file, volume_red , sample_rate)
     return volume_red     
+
 
 '''
 
