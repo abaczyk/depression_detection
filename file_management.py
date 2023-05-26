@@ -46,10 +46,19 @@ def read_files_daic_woz(dataset_path):
 
 def get_EATD_corpus():
     audio_features = []
+    labels = []
     prefix = (config.EATD_DIR.split('\\'))[0]
     folder_name = (config.EATD_DIR.split('\\'))[1]
-    # total files 105
-    for index in range(105):
-        feature_extraction.extract_features_eatd(index + 1, audio_features, folder_name, prefix)
+    EATD_corpus_path = os.path.join(prefix, folder_name)
+    
+    with open(os.path.join(prefix, 'eatd_labels.csv'), 'w', newline='') as output_csv_file:
+        csv_writer = csv.writer(output_csv_file)
+        csv_writer.writerow(['id', 'SDS score', 'is depressed'])
+
+        for folder_name in os.listdir(EATD_corpus_path):
+            extract_audio_features.extract_features(folder_name, audio_features, labels, EATD_corpus_path)
+
+        for item in labels:
+            csv_writer.writerow(item)
 
     save_features(config.SAVE_DIR, audio_features, 'AudioFeaturesEATD')
