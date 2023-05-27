@@ -56,7 +56,7 @@ def get_EATD_corpus():
         csv_writer.writerow(['id', 'SDS score', 'is depressed'])
 
         for folder_name in os.listdir(EATD_corpus_path):
-            extract_audio_features.extract_features(folder_name, audio_features, labels, EATD_corpus_path)
+            feature_extraction.extract_features(folder_name, audio_features, labels, EATD_corpus_path)
 
         for item in labels:
             csv_writer.writerow(item)
